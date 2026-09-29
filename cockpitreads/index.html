@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cockpit Reads by Dexter Dow</title>
-<meta name="description" content="Cockpit Reads is a YouTube channel by Dexter Dow: Microsoft Flight Simulator 2024 flights where the news, aviation stories, and history get read and broken down from the left seat.">
+<meta name="description" content="Cockpit Reads is a YouTube channel by Dexter Dow: scenic Microsoft Flight Simulator 2024 flights on PS5 with readings from his books and plain-spoken commentary on history, foreign policy, and the news.">
 <link rel="canonical" href="https://cockpitreads.com/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Cockpit Reads by Dexter Dow">
-<meta property="og:description" content="Fly the route. Read the story. News, aviation, and history, broken down from the cockpit in Microsoft Flight Simulator 2024.">
+<meta property="og:description" content="Fly the route. Read the story. Books, history, foreign policy, and the news, from the cockpit in Microsoft Flight Simulator 2024.">
 <meta property="og:url" content="https://cockpitreads.com/">
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#0b0f14">
@@ -163,6 +163,27 @@ section { padding: 88px 0; border-top: 1px solid var(--line); }
 .player-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; border-top: 1px solid var(--line); }
 .player-bar .mono { color: var(--muted); font-size: 13px; }
 
+/* Video grid */
+.vgrid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.vcard {
+  display: block; text-decoration: none; color: var(--text);
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  overflow: hidden; transition: transform .15s ease, border-color .15s ease;
+}
+.vcard:hover { transform: translateY(-2px); border-color: var(--muted); }
+.thumb {
+  position: relative; display: block; aspect-ratio: 16 / 9;
+  background: linear-gradient(180deg, var(--sky), var(--ground));
+}
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.thumb b {
+  position: absolute; right: 10px; bottom: 10px;
+  font: 600 12px/1 var(--mono); color: #fff; background: rgba(0, 0, 0, .75);
+  padding: 5px 7px; border-radius: 5px;
+}
+.vmeta { display: block; padding: 14px 16px 16px; font: 500 15px/1.4 var(--body); }
+.vmeta small { display: block; font: 600 11px/1 var(--mono); letter-spacing: .14em; color: var(--cyan); margin-bottom: 8px; }
+
 /* Cards */
 .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 .card {
@@ -227,7 +248,7 @@ footer a { color: var(--muted); }
         <p class="eyebrow">A YouTube channel &middot; Microsoft Flight Simulator 2024</p>
         <h1>Fly the route. <em>Read the story.</em></h1>
         <p class="byline">Cockpit Reads by <strong>Dexter Dow</strong></p>
-        <p class="lede">Left seat on the sim, the day's story on the kneeboard. Each flight reads and breaks down the news, aviation, and history in plain words, with every source named, from pushback to wheels down.</p>
+        <p class="lede">Scenic flights in Microsoft Flight Simulator 2024 on PS5, with something worth hearing on the kneeboard: readings from Dexter's own books, and plain talk on history, foreign policy, and the news, with every source named.</p>
         <div class="cta-row">
           <a class="btn btn-primary js-yt" href="#">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
@@ -256,8 +277,8 @@ footer a { color: var(--muted); }
         <div class="readouts">
           <div class="readout"><small>SIM</small><span>MSFS 2024</span></div>
           <div class="readout"><small>PLATFORM</small><span>PS5</span></div>
-          <div class="readout amber"><small>ON THE KNEEBOARD</small><span>NEWS</span></div>
-          <div class="readout amber"><small>ALSO</small><span>AVIATION &amp; HISTORY</span></div>
+          <div class="readout amber"><small>ON THE KNEEBOARD</small><span>BOOKS &amp; NEWS</span></div>
+          <div class="readout amber"><small>ALSO</small><span>HISTORY &amp; POLICY</span></div>
         </div>
       </div>
     </div>
@@ -269,11 +290,39 @@ footer a { color: var(--muted); }
         <div>
           <p class="eyebrow">Latest flights</p>
           <h2>Now boarding</h2>
-          <p class="lede">The newest uploads from the channel. New flights land on YouTube first.</p>
+          <p class="lede">Newest uploads first, straight from the channel. Full flights and Shorts.</p>
         </div>
         <a class="btn btn-ghost js-yt" href="#">All videos on YouTube</a>
       </div>
       <div class="player" id="player"></div>
+
+      <p class="eyebrow" style="margin:48px 0 18px">Featured</p>
+      <div class="vgrid">
+        <a class="vcard" href="https://www.youtube.com/watch?v=xXOBTcdKMhE" target="_blank" rel="noopener">
+          <span class="thumb"><img src="https://i.ytimg.com/vi/xXOBTcdKMhE/hqdefault.jpg" alt="" loading="lazy"><b>42:17</b></span>
+          <span class="vmeta"><small>FULL FLIGHT &middot; DC to NYC</small>Generational Malpractice Discussion During DC-NYC Flight Simulation and Commentary</span>
+        </a>
+        <a class="vcard" href="https://www.youtube.com/shorts/s-MOpNqZ_u4" target="_blank" rel="noopener">
+          <span class="thumb"><img src="https://i.ytimg.com/vi/s-MOpNqZ_u4/hqdefault.jpg" alt="" loading="lazy"><b>0:17</b></span>
+          <span class="vmeta"><small>SHORT &middot; NUCLEAR HISTORY</small>25 Nations With The Bomb: JFK Saw This Coming</span>
+        </a>
+        <a class="vcard" href="https://www.youtube.com/shorts/prEtDQIBxOk" target="_blank" rel="noopener">
+          <span class="thumb"><img src="https://i.ytimg.com/vi/prEtDQIBxOk/hqdefault.jpg" alt="" loading="lazy"><b>0:16</b></span>
+          <span class="vmeta"><small>SHORT &middot; NEWS</small>Missile Strikes Hit Close to UK Troops | The Truth Exposed</span>
+        </a>
+        <a class="vcard" href="https://www.youtube.com/shorts/DCw2wBZsAxk" target="_blank" rel="noopener">
+          <span class="thumb"><img src="https://i.ytimg.com/vi/DCw2wBZsAxk/hqdefault.jpg" alt="" loading="lazy"><b>0:19</b></span>
+          <span class="vmeta"><small>SHORT &middot; FOREIGN POLICY</small>How the NPT Actually Worked When It Should Have Failed</span>
+        </a>
+        <a class="vcard" href="https://www.youtube.com/shorts/XluKkPpI9uY" target="_blank" rel="noopener">
+          <span class="thumb"><img src="https://i.ytimg.com/vi/XluKkPpI9uY/hqdefault.jpg" alt="" loading="lazy"><b>0:31</b></span>
+          <span class="vmeta"><small>SHORT &middot; NEWS</small>Iran's Nuclear Shell Game Exposed</span>
+        </a>
+        <a class="vcard" href="https://www.youtube.com/shorts/gVOiVf5fybY" target="_blank" rel="noopener">
+          <span class="thumb"><img src="https://i.ytimg.com/vi/gVOiVf5fybY/hqdefault.jpg" alt="" loading="lazy"><b>0:16</b></span>
+          <span class="vmeta"><small>SHORT &middot; NEWS</small>Iran Attacks Cyprus: EU Drawn into Conflict</span>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -295,7 +344,7 @@ footer a { color: var(--muted); }
         <article class="card">
           <span class="tag">02 &middot; CLIMB &amp; CRUISE</span>
           <h3>The read</h3>
-          <p>The story broken down in plain words, beat by beat, with the outlet named and the key quote read exactly as printed.</p>
+          <p>A chapter from one of Dexter's books, or a story broken down in plain words, with the outlet named and any quote read exactly as printed.</p>
         </article>
         <article class="card">
           <span class="tag">03 &middot; DESCENT</span>
@@ -374,11 +423,10 @@ footer a { color: var(--muted); }
 <script>
 /* ---- SITE CONFIG: edit these values only ---- */
 var SITE = {
-  // Channel page link. VERIFY the handle matches your channel exactly.
-  youtubeUrl: "https://www.youtube.com/@CockpitReads",
-  // Channel ID starts with "UC" (YouTube Studio > Settings > Channel > Advanced).
-  // Leave empty to show a "Watch on YouTube" card instead of the embedded player.
-  channelId: "",
+  // Channel: "Cockpit Reads By Dexter Dow" (confirmed via YouTube search 2026-09-29).
+  youtubeUrl: "https://www.youtube.com/@cockpitreads",
+  // Channel ID drives the embedded uploads player below.
+  channelId: "UCBFgIZl6q_sewKY87g_JA9g",
   gsrUrl: "https://granitestatereport.com",
   email: "dexterdow33@gmail.com"
 };

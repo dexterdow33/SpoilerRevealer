@@ -10,8 +10,8 @@ Edit the `SITE` block near the bottom of `index.html`:
 
 | Key | What to put there |
 | --- | --- |
-| `youtubeUrl` | Your exact channel link. The current `@CockpitReads` handle is unconfirmed. |
-| `channelId` | Optional. Your `UC...` channel ID (YouTube Studio > Settings > Channel > Advanced settings). When set, the page embeds your latest uploads. Empty shows a "Go to the channel" card. |
+| `youtubeUrl` | Channel link. Set to `https://www.youtube.com/@cockpitreads`. |
+| `channelId` | `UCBFgIZl6q_sewKY87g_JA9g`. Drives the embedded latest-uploads player. Empty shows a "Go to the channel" card instead. |
 | `gsrUrl` | Granite State Report link. |
 | `email` | Contact inbox. |
 
