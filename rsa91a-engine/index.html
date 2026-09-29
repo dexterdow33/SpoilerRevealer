@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' file:; style-src 'self' 'unsafe-inline' file:; img-src 'self' data: blob: file:; connect-src 'self' data: blob: file:; worker-src 'self' blob: file:; font-src 'self' data: file:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>RSA91A-Engine</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo" aria-hidden="true">91-A</span>
+    <div><strong>RSA91A-Engine</strong><small>Right-to-Know requests and secure redaction</small></div>
+  </div>
+  <nav aria-label="Main">
+    <button data-view="requests">Requests</button>
+    <button data-view="studio">Redaction Studio</button>
+    <button data-view="letters">Letters</button>
+    <button data-view="citations">Citations</button>
+    <button data-view="settings">Settings</button>
+    <button data-view="help">Guide</button>
+  </nav>
+</header>
+<div id="backup-nag" class="nag" hidden>No backup in over a week. Your data lives only in this browser. <button class="small">Back up now</button></div>
+<main>
+  <div id="view-requests" class="view"></div>
+  <div id="view-studio" class="view" hidden></div>
+  <div id="view-letters" class="view" hidden></div>
+  <div id="view-citations" class="view" hidden></div>
+  <div id="view-settings" class="view" hidden></div>
+  <div id="view-help" class="view" hidden></div>
+</main>
+<footer class="foot">RSA91A-Engine 1.0.0 &middot; Ninth State Software &middot; Works offline. Drafting tool, not legal advice.</footer>
+<div id="toasts" aria-live="polite"></div>
+
+<script src="js/vendor/pdf.min.js"></script>
+<script src="js/vendor/pdf-lib.min.js"></script>
+<script src="js/core/deadlines.js"></script>
+<script src="js/core/detectors.js"></script>
+<script src="js/core/citations.js"></script>
+<script src="js/core/letters.js"></script>
+<script src="js/core/textmap.js"></script>
+<script src="js/app/ui.js"></script>
+<script src="js/app/store.js"></script>
+<script src="js/app/redaction-engine.js"></script>
+<script src="js/app/tracker.js"></script>
+<script src="js/app/studio.js"></script>
+<script src="js/app/letters-ui.js"></script>
+<script src="js/app/settings-ui.js"></script>
+<script src="js/app/main.js"></script>
+</body>
+</html>

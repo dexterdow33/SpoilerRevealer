@@ -1,0 +1,12 @@
+RSA91A-Engine
+Copyright (c) 2026 Ninth State Software. All rights reserved.
+
+This software is licensed, not sold. Use is governed by the license terms
+provided at purchase from NinthStateSoftware.com. No part of this software
+may be copied, redistributed, or resold except as those terms allow.
+
+Third-party components are licensed separately; see THIRD_PARTY_NOTICES.md.
+
+THIS SOFTWARE DRAFTS DOCUMENTS AND APPLIES REDACTIONS THE USER SELECTS. IT
+DOES NOT PROVIDE LEGAL ADVICE. THE USER IS RESPONSIBLE FOR REVIEWING EVERY
+REDACTION, CITATION, AND LETTER BEFORE RELEASE.
