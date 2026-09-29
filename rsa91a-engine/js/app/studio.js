@@ -585,6 +585,7 @@
     if (params && params.requestId) S.requestId = params.requestId;
     if (host.dataset.built) {
       renderSidebar();
+      drawOverlay();
       return;
     }
     host.dataset.built = '1';
