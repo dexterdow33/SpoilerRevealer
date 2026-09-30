@@ -36,7 +36,8 @@ Sold by Ninth State Software (NinthStateSoftware.com).
   - metadata
 
   A file that fails any check is not saved.
-- Warns when a page has no text layer (a likely scan) so the reviewer checks it by eye.
+- **Offline OCR for scans.** Pages with no text layer (scans, photos, faxes) can be read with a built-in OCR engine (Tesseract, WebAssembly, English model included). The scanner then runs on the OCR text, and on those pages it also accepts near matches of your terms, because OCR misreads characters. Marks from OCR pages are labeled so reviewers look harder. The engine loads on first use, about 12 MB from the app's own files; nothing is downloaded.
+- Warns when a page has no text layer and offers OCR; those pages still deserve a review by eye.
 - **Public redaction log (PDF).** A Vaughn-style index listing each redaction's page or Bates number, scope, exemption and reason. It never reproduces the withheld content.
 - **Internal audit log (CSV).** Includes the covered text, the detector used, and SHA-256 hashes of the source and output files for chain of custody.
 - Save and reload a review session.
@@ -73,11 +74,13 @@ RSA 91-A:4, IV(b) says "within 5 business days" and does not define how to count
 
 ## Development
 
+The browser tests include an OCR run: a page is rasterized to an image, OCR'd, redacted and exported, then the output is OCR'd to show the identifiers are unreadable.
+
 ```
 npm install          # dev dependencies only (pdf.js, pdf-lib, Playwright for tests)
 npm run vendor       # copy browser builds into js/vendor (already committed)
 npm test             # unit tests: deadlines, detectors, text geometry, letters
-npm run test:e2e     # headless Chromium: scan, redact, export, independent leak check
+npm run test:e2e     # headless Chromium: scan, redact, export, leak check, UI, OCR
 npm run build        # dist/RSA91A-Engine-<version>.zip for sale/download
 ```
 
@@ -93,17 +96,20 @@ js/core/              pure logic, also loaded by Node tests
   letters.js          letter templates
   textmap.js          maps text matches to page rectangles
 js/app/               browser UI
-  redaction-engine.js rasterize, burn in, rebuild, verify, log PDF
+  ocr.js              offline OCR (Tesseract WebAssembly on the main thread)
+  redaction-engine.js rasterize, burn in, rebuild, verify, log PDF, OCR text layer
   studio.js           Redaction Studio
   tracker.js          request tracker
   letters-ui.js       letter drafting
   settings-ui.js      settings, citations, guide
-js/vendor/            pdf.js 3.11.174 (Apache-2.0), pdf-lib 1.17.1 (MIT)
+js/vendor/            pdf.js 3.11.174 (Apache-2.0), pdf-lib 1.17.1 (MIT),
+                      Tesseract core 6.1.2 (Apache-2.0), eng.traineddata (Apache-2.0),
+                      zlib.js (MIT), wasm-feature-detect (Apache-2.0)
 ```
 
 ## Known limits
 
 - The redacted output is not text-searchable, because every page is an image. That is the price of guaranteed removal. OCR is not included.
-- Automatic detection needs a text layer. Scanned pages must be reviewed by eye.
+- OCR is imperfect. It misses and misreads words, especially on poor scans, handwriting and small print. Treat its marks as a first pass and review OCR pages by eye. Only English is included.
 - Data is stored in the browser's local storage. Users should download backups; the app reminds them weekly.
 - Password-protected PDFs must be unlocked before opening.
