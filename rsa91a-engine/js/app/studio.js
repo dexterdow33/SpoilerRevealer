@@ -21,6 +21,7 @@
     terms: '',
     regex: '',
     textless: [],
+    ocrConf: {},
     busy: false,
     preview: false,
     lastExport: null,
@@ -55,6 +56,7 @@
       S.lastExport = null;
       S.textless = [];
       S.annotated = [];
+      S.ocrConf = {};
       for (let i = 0; i < S.doc.numPages; i++) {
         if (!await S.doc.hasText(i)) S.textless.push(i + 1);
         if ((await S.doc.annotations(i)).length) S.annotated.push(i + 1);
@@ -243,8 +245,37 @@
     renderMarkList();
   }
 
+  /** OCR every page that still has no text. Returns the number of pages processed. */
+  async function runOcr(pages) {
+    if (!S.doc) return 0;
+    const todo = pages || await S.doc.textlessPages();
+    if (!todo.length) return 0;
+    setBusy('Preparing OCR...');
+    let done = 0;
+    try {
+      for (const i of todo) {
+        const r = await S.doc.ocrPage(i, 300, (msg) => setBusy(msg || ('OCR page ' + (i + 1) + ' of ' + S.doc.numPages + '...')));
+        setBusy('OCR page ' + (i + 1) + ' of ' + S.doc.numPages + '...');
+        S.ocrConf[i] = r.meanConf;
+        done++;
+      }
+      S.textless = (await S.doc.textlessPages()).map((i) => i + 1);
+      renderSidebar();
+      toast('OCR read ' + done + ' page(s). OCR misses and misreads words; review those pages by eye.', 'warn');
+    } catch (e) {
+      console.error(e);
+      toast('OCR failed: ' + e.message, 'error');
+    } finally {
+      setBusy(null);
+    }
+    return done;
+  }
+
   async function scan() {
     if (!S.doc) return toast('Open a document first.', 'error');
+    if (S.textless.length && await confirmDialog(S.textless.length + ' page(s) have no text layer, so the scanner cannot read them. Run OCR on those pages first? (The OCR engine loads once, about 12 MB, and stays offline.)', 'Run OCR')) {
+      await runOcr();
+    }
     const regexes = [];
     if (S.regex.trim()) {
       try { new RegExp(S.regex); } catch (e) { return toast('Custom pattern is not a valid regular expression: ' + e.message, 'error'); }
@@ -290,7 +321,10 @@
         h('dt', {}, 'Pages'), h('dd', {}, String(S.doc.numPages)),
         h('dt', {}, 'SHA-256'), h('dd', { class: 'mono small', title: S.doc.sha256 }, S.doc.sha256.slice(0, 16) + '...')) : h('p', { class: 'help' }, 'Or drag a file onto the page area.'),
       (S.annotated || []).length ? h('p', { class: 'alert warn' }, 'Form fields or comments on page(s) ' + S.annotated.join(', ') + '. Their visible content is printed into the output; the scan checks their values, but review them by eye.') : null,
-      S.textless.length ? h('p', { class: 'alert warn' }, 'No text layer on page(s) ' + S.textless.join(', ') + '. These are likely scans. Automatic detection cannot read them; review by eye and draw boxes.') : null,
+      S.textless.length ? h('div', { class: 'alert warn' },
+        h('p', {}, 'No text layer on page(s) ' + S.textless.join(', ') + '. These are likely scans. Run OCR so the scanner can read them, then still review those pages by eye.'),
+        h('button', { class: 'small', onclick: () => runOcr() }, 'Run OCR on ' + S.textless.length + ' page(s)')) : null,
+      Object.keys(S.ocrConf || {}).length ? h('p', { class: 'help' }, 'OCR text on page(s) ' + Object.keys(S.ocrConf).map((k) => (Number(k) + 1) + ' (' + Math.round(S.ocrConf[k]) + '% confidence)').join(', ') + '. Marks from OCR pages are labeled "OCR:".') : null,
       h('label', {}, h('span', {}, 'Linked request'),
         h('select', { onchange: (e) => { S.requestId = e.target.value; } },
           h('option', { value: '' }, 'None'),
@@ -630,5 +664,5 @@
     renderSidebar();
   }
 
-  NS.studio = { render, open, state: S, scan, doExport };
+  NS.studio = { render, open, state: S, scan, doExport, runOcr };
 })(typeof self !== 'undefined' ? self : this);

@@ -32,6 +32,9 @@ Every other tool draws a box over the text. RSA91A-Engine rebuilds the page. Eac
 
 Then it checks its own work. The output is reopened and tested for leftover text, every redacted string, annotations, attachments, scripts, bookmarks and metadata. A file that fails is not saved.
 
+### Reads scans
+Most town records are scans, and a scan is a picture. Built-in OCR turns the picture into text on your computer, so the scanner below works on scanned pages too. It even tolerates the character misreads OCR makes when matching names you list.
+
 ### Finds the sensitive stuff first
 The scanner proposes redactions for Social Security and taxpayer ID numbers, bank and card numbers, phone numbers, emails, dates of birth, home addresses and any names or terms you list. It also reads filled-in form fields. Every hit is a proposal. A person accepts or rejects each one, draws boxes by hand, and withholds whole pages when needed.
 
@@ -74,7 +77,7 @@ RSA91A-Engine runs entirely in your web browser from files on your computer. It 
 No. Every page is an image. That is the cost of guaranteed removal. You keep the original for your own search.
 
 **Can it read scanned documents?**
-It can redact them. Automatic detection needs a text layer, which scans don't have, so the app tells you which pages to review by eye and lets you draw boxes.
+Yes. Built-in OCR turns a scanned page into searchable text on your computer, so the same automatic detection runs on scans. OCR is not perfect, so the app labels those marks and asks you to review scanned pages by eye too. English only.
 
 **Does it give legal advice?**
 No. It drafts documents and applies redactions you choose. Whether an exemption applies is your call, or your lawyer's.
