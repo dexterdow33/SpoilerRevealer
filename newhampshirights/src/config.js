@@ -7,6 +7,7 @@ const SECTIONS = [
   { slug: 'information', name: 'Information', blurb: 'Notices, public records, how-tos, and things worth knowing.' },
   { slug: 'help', name: 'Help', blurb: 'Ask for a hand or offer one. Rides, repairs, advice, lost and found.' },
   { slug: 'sharing', name: 'Sharing', blurb: 'Photos, stories, events, and the good stuff happening around the state.' },
+  { slug: 'news', name: 'News', blurb: 'Discuss reporting from our partner newsroom with verified residents. Threads open from the story itself.' },
 ];
 
 // The ten New Hampshire counties.
@@ -25,9 +26,22 @@ const DOC_TYPES = [
 
 function loadConfig(overrides = {}) {
   const dataDir = overrides.dataDir || process.env.DATA_DIR || path.join(__dirname, '..', 'data');
+  const partnerUrl = (process.env.PARTNER_URL || 'https://granitestatereport.com').replace(/\/+$/, '');
   return {
     siteName: process.env.SITE_NAME || 'NewHampshirights',
     domain: process.env.SITE_DOMAIN || 'newhampshirights.com',
+    baseUrl: (process.env.BASE_URL || 'http://localhost:3000').replace(/\/+$/, ''),
+    // The partner newsroom whose stories get discussion threads. Its WordPress REST API
+    // supplies article titles, so members can only open threads on real published stories.
+    partner: {
+      name: process.env.PARTNER_NAME || 'Granite State Report',
+      url: partnerUrl,
+      host: new URL(partnerUrl).hostname.replace(/^www\./, ''),
+    },
+    // SMTP_URL like smtps://user:pass@smtp.example.com:465. Without it, mail is printed to the console.
+    smtpUrl: process.env.SMTP_URL || '',
+    mailFrom: process.env.MAIL_FROM || 'no-reply@newhampshirights.com',
+    pendingUploadDays: 30,
     port: Number(process.env.PORT || 3000),
     production: process.env.NODE_ENV === 'production',
     dataDir,

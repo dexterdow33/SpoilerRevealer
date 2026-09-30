@@ -5,28 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const { createApp } = require('../src/app');
 
-const PNG = Buffer.from('89504e470d0a1a0a0000000d4948445200000001000000010806000000' +
-  '1f15c4890000000d49444154789c6360000002000154a24f5d0000000049454e44ae426082', 'hex');
-
-// Minimal cookie-jar client around fetch.
-function client(base) {
-  const jar = {};
-  const call = async (url, opts = {}) => {
-    const res = await fetch(base + url, {
-      redirect: 'manual', ...opts,
-      headers: { ...(opts.headers || {}), cookie: Object.entries(jar).map(([k, v]) => `${k}=${v}`).join('; ') },
-    });
-    for (const c of res.headers.getSetCookie()) {
-      const [pair] = c.split(';');
-      const i = pair.indexOf('=');
-      jar[pair.slice(0, i)] = pair.slice(i + 1);
-    }
-    return res;
-  };
-  const csrf = () => decodeURIComponent(jar.nhr_csrf);
-  const post = (url, fields) => call(url, { method: 'POST', body: new URLSearchParams({ _csrf: csrf(), ...fields }) });
-  return { call, post, csrf };
-}
+const { PNG, client } = require('./helpers');
 
 test('signup, verify, approve, post, comment', async (t) => {
   const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'nhr-'));

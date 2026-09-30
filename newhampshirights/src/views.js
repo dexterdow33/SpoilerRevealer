@@ -22,6 +22,7 @@ function layout(req, config, title, body, { flash } = {}) {
     : '';
   const account = u
     ? `${member ? `<a href="/u/${u.id}">${h(u.display_name)}</a>` : ''}
+       <a href="/account">Account</a>
        ${u.role === 'admin' ? '<a href="/admin">Admin</a>' : ''}
        <form method="post" action="/logout" class="inline">${csrf(req)}<button class="linklike">Log out</button></form>`
     : '<a href="/login">Log in</a><a class="btn small" href="/signup">Join</a>';
@@ -54,12 +55,13 @@ ${body}
 </html>`;
 }
 
-function landing() {
+function landing(config) {
   return `
 <section class="hero">
   <h1>The social network for New Hampshire residents. Only.</h1>
   <p>Every member shows a New Hampshire ID, or a U.S. passport plus proof of an NH address, before they can read or post. No bots, no out-of-state brigades, no anonymous drive-bys.</p>
   <p><a class="btn" href="/signup">Join and get verified</a> <a class="btn ghost" href="/login">Log in</a></p>
+  <p class="muted">Home of the verified-resident discussion threads for <a href="${h(config.partner.url)}">${h(config.partner.name)}</a> stories.</p>
 </section>
 <section class="grid">
   ${SECTIONS.map((s) => `<div class="card"><h3>${h(s.name)}</h3><p>${h(s.blurb)}</p></div>`).join('')}
@@ -83,6 +85,7 @@ function authForm(req, kind, values = {}, error = '') {
   ${error ? `<p class="error">${h(error)}</p>` : ''}
   <form method="post" action="/${kind}">
     ${csrf(req)}
+    ${values.next ? `<input type="hidden" name="next" value="${h(values.next)}">` : ''}
     <label>Email <input type="email" name="email" required value="${h(values.email)}" autocomplete="email"></label>
     <label>Password <input type="password" name="password" required minlength="${signup ? 10 : 1}" autocomplete="${signup ? 'new-password' : 'current-password'}"></label>
     ${signup ? `
@@ -94,7 +97,7 @@ function authForm(req, kind, values = {}, error = '') {
     <p class="muted">Password: 10 characters minimum.</p>` : ''}
     <button class="btn">${signup ? 'Create account' : 'Log in'}</button>
   </form>
-  <p class="muted">${signup ? 'Already a member? <a href="/login">Log in</a>' : 'New here? <a href="/signup">Join</a>'}</p>
+  <p class="muted">${signup ? 'Already a member? <a href="/login">Log in</a>' : 'New here? <a href="/signup">Join</a> · <a href="/forgot">Forgot password?</a>'}</p>
 </section>`;
 }
 
@@ -102,6 +105,7 @@ function verifyPage(req, latest, error = '') {
   const u = req.user;
   let status = '';
   if (u.status === 'pending') status = '<p class="flash">Your documents are in the review queue. You will get access as soon as a reviewer approves them.</p>';
+  if (u.status === 'unverified' && latest && latest.status === 'expired') status = '<p class="error">Your last submission expired before review and its images were deleted. Please submit again.</p>';
   if (u.status === 'rejected') status = `<p class="error">Your last submission was not approved${latest && latest.note ? `: ${h(latest.note)}` : '.'} You can submit again.</p>`;
   if (u.status === 'suspended') return '<section class="card narrow"><h1>Account suspended</h1><p>Contact the moderators if you think this is a mistake.</p></section>';
   const form = u.status === 'pending' ? '' : `
@@ -131,17 +135,22 @@ function verifyPage(req, latest, error = '') {
 </section>`;
 }
 
+const place = (p) => (p.source_url ? 'Statewide' : `${h(p.county)} County`);
+const byline = (p) => (p.source_url
+  ? `story from <a href="${h(p.source_url)}" rel="noopener">${h(p.display_name)}</a>`
+  : `by <a href="/u/${p.user_id}">${h(p.display_name)}</a> of ${h(p.town)}`);
+
 function postRow(p) {
   return `
 <article class="post-row">
-  <div class="meta"><a class="tag" href="/s/${h(p.section)}">${h(sectionName(p.section))}</a> ${h(p.county)} County · ${date(p.created_at)}</div>
+  <div class="meta"><a class="tag" href="/s/${h(p.section)}">${h(sectionName(p.section))}</a> ${place(p)} · ${date(p.created_at)}</div>
   <h3><a href="/p/${p.id}">${h(p.title)}</a> ${p.price_cents != null ? `<span class="price">${money(p.price_cents)}</span>` : ''}</h3>
-  <div class="meta">by <a href="/u/${p.user_id}">${h(p.display_name)}</a> of ${h(p.town)} · ${p.comment_count || 0} comments</div>
+  <div class="meta">${byline(p)} · ${p.comment_count || 0} comments</div>
 </article>`;
 }
 
 function feed(req, { posts, heading, blurb, section, county, q }) {
-  const newLink = section ? `/new?section=${h(section)}` : '/new';
+  const newLink = section && section !== 'news' ? `/new?section=${h(section)}` : '/new';
   return `
 <div class="feed-head">
   <div><h1>${h(heading)}</h1>${blurb ? `<p class="muted">${h(blurb)}</p>` : ''}</div>
@@ -155,22 +164,23 @@ function feed(req, { posts, heading, blurb, section, county, q }) {
 ${posts.length ? posts.map(postRow).join('') : '<p class="muted">Nothing here yet. Start it off.</p>'}`;
 }
 
-function newPostForm(req, values = {}, error = '') {
+function newPostForm(req, values = {}, error = '', editId = null) {
+  const sections = SECTIONS.filter((s) => s.slug !== 'news');
   return `
 <section class="card narrow">
-  <h1>New post</h1>
+  <h1>${editId ? 'Edit post' : 'New post'}</h1>
   ${error ? `<p class="error">${h(error)}</p>` : ''}
-  <form method="post" action="/posts">
+  <form method="post" action="${editId ? `/p/${editId}/edit` : '/posts'}">
     ${csrf(req)}
-    <label>Section <select name="section" required>
-      ${SECTIONS.map((s) => `<option value="${s.slug}" ${s.slug === values.section ? 'selected' : ''}>${h(s.name)}</option>`).join('')}
-    </select></label>
+    ${editId ? `<p class="muted">Section: ${h(sectionName(values.section))}</p>` : `<label>Section <select name="section" required>
+      ${sections.map((s) => `<option value="${s.slug}" ${s.slug === values.section ? 'selected' : ''}>${h(s.name)}</option>`).join('')}
+    </select></label>`}
     <label>County <select name="county" required>${countyOptions(values.county || req.user.county)}</select></label>
     <label>Title <input name="title" required maxlength="140" value="${h(values.title)}"></label>
     <label>Post <textarea name="body" required rows="8" maxlength="10000">${h(values.body)}</textarea></label>
     <label>Price, Marketplace only (e.g. 25 or 25.00) <input name="price" inputmode="decimal" value="${h(values.price)}"></label>
     <label>Link, optional (https:// only) <input name="link" type="url" value="${h(values.link)}"></label>
-    <button class="btn">Publish</button>
+    <button class="btn">${editId ? 'Save changes' : 'Publish'}</button>
   </form>
 </section>`;
 }
@@ -179,11 +189,11 @@ function postPage(req, post, comments) {
   const canDelete = req.user.id === post.user_id || req.user.role === 'admin';
   return `
 <article class="card">
-  <div class="meta"><a class="tag" href="/s/${h(post.section)}">${h(sectionName(post.section))}</a> ${h(post.county)} County · ${date(post.created_at)}</div>
+  <div class="meta"><a class="tag" href="/s/${h(post.section)}">${h(sectionName(post.section))}</a> ${place(post)} · ${date(post.created_at)}</div>
   <h1>${h(post.title)} ${post.price_cents != null ? `<span class="price">${money(post.price_cents)}</span>` : ''}</h1>
-  <div class="meta">by <a href="/u/${post.user_id}">${h(post.display_name)}</a> of ${h(post.town)} <span class="badge">Verified NH</span></div>
+  <div class="meta">${byline(post)} ${post.source_url ? '' : '<span class="badge">Verified NH</span>'}${post.edited_at ? ' · edited' : ''}</div>
   <div class="body">${paragraphs(post.body)}</div>
-  ${post.link ? `<p><a href="${h(post.link)}" rel="nofollow noopener noreferrer" target="_blank">${h(post.link)}</a></p>` : ''}
+  ${post.link ? `<p><a href="${h(post.link)}" rel="nofollow noopener noreferrer" target="_blank">${post.source_url ? 'Read the full story' : h(post.link)}</a></p>` : ''}
   <div class="actions">
     ${post.section === 'marketplace' && req.user.id !== post.user_id ? '<p class="muted">Reply below or message the seller through the comments. Meet in a public place; never send payment in advance to someone you have not met.</p>' : ''}
     <details><summary>Report this post</summary>
@@ -191,6 +201,7 @@ function postPage(req, post, comments) {
         <input name="reason" required maxlength="300" placeholder="What is wrong with it?"><button class="btn small ghost">Send report</button>
       </form>
     </details>
+    ${req.user.id === post.user_id && !post.source_url ? `<a class="btn small ghost" href="/p/${post.id}/edit">Edit</a>` : ''}
     ${canDelete ? `<form method="post" action="/p/${post.id}/delete" class="inline">${csrf(req)}<button class="btn small danger">Remove post</button></form>` : ''}
   </div>
 </article>
@@ -270,6 +281,62 @@ function adminVerification(req, v, files) {
 </section>`;
 }
 
+function storiesPanel(config, stories) {
+  if (!stories.length) return '';
+  return `
+<section class="card stories">
+  <h2>Latest from <a href="${h(config.partner.url)}">${h(config.partner.name)}</a></h2>
+  ${stories.map((s) => `
+    <div class="story">
+      <a class="story-title" href="${h(s.url)}" rel="noopener">${h(s.title)}</a>
+      <a class="btn small ghost" href="/discuss?url=${encodeURIComponent(s.url)}">Discuss</a>
+    </div>`).join('')}
+</section>`;
+}
+
+function forgotForm(req, error = '') {
+  return `
+<section class="card narrow">
+  <h1>Reset your password</h1>
+  ${error ? `<p class="error">${h(error)}</p>` : ''}
+  <form method="post" action="/forgot">${csrf(req)}
+    <label>Email <input type="email" name="email" required autocomplete="email"></label>
+    <button class="btn">Send reset link</button>
+  </form>
+</section>`;
+}
+
+function resetForm(req, token, error = '') {
+  return `
+<section class="card narrow">
+  <h1>Choose a new password</h1>
+  ${error ? `<p class="error">${h(error)}</p>` : ''}
+  <form method="post" action="/reset/${h(token)}">${csrf(req)}
+    <label>New password (10 characters minimum) <input type="password" name="password" required minlength="10" autocomplete="new-password"></label>
+    <button class="btn">Save password</button>
+  </form>
+</section>`;
+}
+
+function accountPage(req, error = '') {
+  const u = req.user;
+  return `
+<section class="card narrow">
+  <h1>Your account</h1>
+  <p>${h(u.email)} · ${h(u.town)}, ${h(u.county)} County · status: ${h(u.status)}</p>
+  <p><a href="/forgot">Change password</a></p>
+</section>
+<section class="card narrow">
+  <h2>Delete account</h2>
+  ${error ? `<p class="error">${h(error)}</p>` : ''}
+  <p>This permanently deletes your account, posts, comments, and any ID records or images we still hold. It cannot be undone.</p>
+  <form method="post" action="/account/delete">${csrf(req)}
+    <label>Confirm with your password <input type="password" name="password" required autocomplete="current-password"></label>
+    <button class="btn danger">Delete my account</button>
+  </form>
+</section>`;
+}
+
 const staticPages = {
   about: (config) => `<section class="card"><h1>About ${h(config.siteName)}</h1>
     <p>${h(config.siteName)} is a social platform with one membership rule: you live in New Hampshire, and you proved it. Verified residents use it to follow state and town government, buy and sell locally, argue in good faith, share information, and help each other.</p>
@@ -298,4 +365,5 @@ const staticPages = {
 module.exports = {
   h, layout, landing, authForm, verifyPage, feed, newPostForm, postPage,
   profilePage, adminHome, adminVerification, staticPages,
+  storiesPanel, forgotForm, resetForm, accountPage,
 };

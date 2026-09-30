@@ -23,7 +23,7 @@ a { color: var(--accent); }
 .sections { display: flex; gap: 18px; overflow-x: auto; padding-bottom: 10px; }
 .sections a { text-decoration: none; color: var(--muted); font-weight: 600; white-space: nowrap; }
 .sections a:hover { color: var(--accent); }
-main { padding-top: 24px; padding-bottom: 40px; }
+main.wrap { padding-top: 24px; padding-bottom: 40px; }
 h1 { font-size: 1.7rem; line-height: 1.2; margin: 0 0 10px; }
 h2 { font-size: 1.25rem; }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; margin-bottom: 18px; }
@@ -67,3 +67,7 @@ input[type=file] { padding: 6px; }
 .files img { width: 100%; border: 1px solid var(--line); border-radius: 6px; }
 .foot { color: var(--muted); font-size: 0.85rem; padding-bottom: 30px; border-top: 1px solid var(--line); padding-top: 16px; }
 @media (max-width: 600px) { .hero h1 { font-size: 1.7rem; } .feed-head { flex-direction: column; } }
+.stories h2 { margin-top: 0; font-size: 1.1rem; }
+.story { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+.story-title { color: var(--text); font-weight: 600; text-decoration: none; }
+.story-title:hover { color: var(--accent); }

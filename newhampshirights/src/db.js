@@ -60,6 +60,12 @@ CREATE TABLE IF NOT EXISTS comments (
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS password_resets (
+  token_hash TEXT PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  expires_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS reports (
   id INTEGER PRIMARY KEY,
   post_id INTEGER NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
@@ -76,7 +82,16 @@ function openDb(config) {
   const db = new DatabaseSync(config.dbFile);
   db.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
   db.exec(SCHEMA);
+  migrate(db);
   return db;
+}
+
+// Columns added after v0.1. SQLite has no ADD COLUMN IF NOT EXISTS, so check first.
+function migrate(db) {
+  const has = (table, col) => db.prepare(`PRAGMA table_info(${table})`).all().some((c) => c.name === col);
+  if (!has('posts', 'source_url')) db.exec('ALTER TABLE posts ADD COLUMN source_url TEXT');
+  if (!has('posts', 'edited_at')) db.exec('ALTER TABLE posts ADD COLUMN edited_at TEXT');
+  db.exec('CREATE UNIQUE INDEX IF NOT EXISTS posts_source_url ON posts(source_url) WHERE source_url IS NOT NULL');
 }
 
 module.exports = { openDb };
