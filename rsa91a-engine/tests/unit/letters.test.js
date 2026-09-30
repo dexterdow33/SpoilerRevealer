@@ -9,8 +9,8 @@ const req = { id: 'RTK-2026-0001', agency: 'Town of Example', receivedDate: '202
 test('request letter states the 5-business-day date and cites only library provisions', () => {
   const t = L.request(req, settings);
   assert.match(t, /October 5, 2026/);
-  assert.match(t, /RSA 91-A:4, IV/);
-  const cited = new Set((t.match(/RSA 91-A:\d+, [IVXL]+(?:-a)?/g) || []));
+  assert.match(t, /RSA 91-A:4, IV\(b\)/);
+  const cited = new Set((t.match(/RSA 91-A:\d+, [IVXL]+(?:-a)?(?:\([a-z]\))?/g) || []));
   const known = new Set(C.CITATIONS.map((c) => c.cite));
   for (const c of cited) assert.ok(known.has(c), 'unknown citation in template: ' + c);
 });
@@ -27,6 +27,7 @@ test('denial lists each exemption with its reason', () => {
     { citationId: '91-A:5,XII', description: 'Memo from town counsel, 3/2/2025', reason: 'Legal advice to the select board.' },
     { citationId: '91-A:5,IV', pages: '4-5', reason: 'Employee home address.' },
   ] });
+  assert.match(t, /RSA 91-A:4, IV\(b\)\(2\)/);
   assert.match(t, /RSA 91-A:5, XII \(Attorney-client/);
   assert.match(t, /Memo from town counsel, 3\/2\/2025: Legal advice/);
   assert.match(t, /Page\(s\) 4-5: Employee home address/);

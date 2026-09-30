@@ -58,14 +58,18 @@ Unzip and open `index.html` in Chrome, Edge or Firefox. That's it.
 
 ## Legal content and its sources
 
-The built-in citations cover RSA 91-A:4, I, I-a, IV and V, and RSA 91-A:5, IV and XII. Each was checked against the statutory text quoted or discussed in these opinions:
+The built-in citations cover RSA 91-A:4, I, I-a, IV(a), IV(b), IV (copy costs), V and VI; RSA 91-A:5, IV and XII; and RSA 91-A:8, I. Each was checked against the statutory text quoted in New Hampshire Supreme Court opinions, and each entry names its source and the statute edition that source cites:
 
-- *Taylor v. School Administrative Unit #55*, No. 2016-0702 (N.H. Sept. 21, 2017), which quotes RSA 91-A:4, I, IV and V (Supp. 2016).
-- *Keene Publishing Corp. v. Fall Mountain Regional School District*, 2025 N.H. 35 (Aug. 12, 2025), on RSA 91-A:4, I and I-a, RSA 91-A:5, IV (the three-step privacy balancing test) and RSA 91-A:5, XII (attorney-client privilege and work product, added by Laws 2021, 163:2).
+- *Union Leader Corp. v. N.H. Dep't of Safety*, 2024 N.H. 35: RSA 91-A:4, I (2023).
+- *Colquhoun v. City of Nashua*, No. 2021-0253 (Oct. 26, 2022): RSA 91-A:4, IV(a) (Supp. 2021).
+- *Brandano v. Superintendent of SAU 16*, No. 2022-0084 (order, Nov. 3, 2023): RSA 91-A:4, IV(b) and RSA 91-A:8, I (2023).
+- *Stone v. City of Claremont*, 2024 N.H. 11: RSA 91-A:4, VI (2023); cites IV(a)-(c).
+- *Michaud v. Town of Campton Police Dep't*, 2024 N.H. 19, and *Keene Publishing Corp. v. Fall Mountain Regional School District*, 2025 N.H. 35: RSA 91-A:4, I-a and RSA 91-A:5, IV and XII (2023).
+- *Taylor v. School Administrative Unit #55*, No. 2016-0702 (Sept. 21, 2017): RSA 91-A:4, IV and V (Supp. 2016). Paragraph IV was later divided into lettered subparagraphs. Two entries rest on this older text and are marked **not confirmed** in the app: the copy-cost sentences (paragraph IV, subparagraph unknown) and paragraph V.
 
-Statutes change. The app tells users to confirm current text at gc.nh.gov before relying on any citation. **RSA91A-Engine is a drafting and redaction tool, not legal advice.**
+The primary statute site, gc.nh.gov, was not reachable from the build environment, so no entry was checked against the statute page itself. Statutes change. The app tells users to confirm current text at gc.nh.gov before relying on any citation. **RSA91A-Engine is a drafting and redaction tool, not legal advice.**
 
-The statute says "within 5 business days of request" and does not define how to count. By default the day after receipt is business day 1; users can change this in Settings. The built-in holiday helper adds U.S. federal holidays only. New Hampshire state and municipal calendars differ, and the app says so.
+RSA 91-A:4, IV(b) says "within 5 business days" and does not define how to count. By default the day after receipt is business day 1; users can change this in Settings. The built-in holiday helper adds U.S. federal holidays only. New Hampshire state and municipal calendars differ, and the app says so.
 
 ## Development
 
