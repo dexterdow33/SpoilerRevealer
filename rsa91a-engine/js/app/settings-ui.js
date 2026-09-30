@@ -39,7 +39,7 @@
         h('h3', {}, 'Business-day calendar'),
         h('label', { class: 'check' }, h('input', { type: 'checkbox', checked: s.countReceiptDay, onchange: (e) => { s.countReceiptDay = e.target.checked; store.save(); } }),
           ' Count the day of receipt as business day 1'),
-        h('p', { class: 'help' }, 'Off (default): the day after receipt is day 1. RSA 91-A:4, IV says "within 5 business days of request" and does not define the count. Pick the reading your office or counsel uses.'),
+        h('p', { class: 'help' }, 'Off (default): the day after receipt is day 1. RSA 91-A:4, IV(b) says "within 5 business days" of the request and does not define the count. Pick the reading your office or counsel uses.'),
         h('label', {}, h('span', {}, 'Holidays (skipped when counting)'), hol),
         h('div', { class: 'row' }, yearInput,
           h('button', { class: 'small', onclick: () => {
@@ -72,8 +72,8 @@
       h('button', { class: 'primary', onclick: addCitation }, 'Add a citation')));
     host.appendChild(h('p', { class: 'alert' }, citations.VERIFY_NOTE));
     for (const c of all) {
-      const src = c.userSupplied ? 'User-added. Not checked by RSA91A-Engine.' : 'Checked against: ' + c.source.split(',').map((k) => citations.SOURCES[k.trim()]).join('; ');
-      host.appendChild(h('article', { class: 'cite-card' + (c.userSupplied ? ' user' : '') },
+      const src = c.userSupplied ? 'User-added. Not checked by RSA91A-Engine.' : (c.unconfirmed ? 'NOT CONFIRMED against a post-2021 edition. Source: ' : 'Checked against: ') + c.source.split(',').map((k) => citations.SOURCES[k.trim()]).join('; ');
+      host.appendChild(h('article', { class: 'cite-card' + (c.userSupplied ? ' user' : '') + (c.unconfirmed ? ' unconfirmed' : '') },
         h('div', { class: 'row' }, h('h3', {}, c.cite), h('span', { class: 'tag' }, c.kind), h('div', { class: 'spacer' }),
           c.userSupplied ? h('button', { class: 'small danger', onclick: async () => {
             if (!await confirmDialog('Remove ' + c.cite + '?', 'Remove')) return;
@@ -109,7 +109,7 @@
     host.appendChild(h('div', { class: 'cols' },
       sec('Workflow',
         h('ol', {},
-          h('li', {}, 'Log the request under Requests. The tracker shows the 5-business-day window under RSA 91-A:4, IV.'),
+          h('li', {}, 'Log the request under Requests. The tracker shows the 5-business-day window under RSA 91-A:4, IV(b).'),
           h('li', {}, 'If the records are not ready, draft an Acknowledgment with a time estimate and log it as sent.'),
           h('li', {}, 'Open each record in the Redaction Studio, linked to the request. Scan, review every proposed mark, add boxes by hand, pick the exemption and state the reason.'),
           h('li', {}, 'Export. The engine rebuilds the file and verifies it. Only a passing file is saved.'),

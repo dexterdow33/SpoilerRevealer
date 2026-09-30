@@ -451,7 +451,7 @@
     if (proposed.length && !await confirmDialog(proposed.length + ' proposed mark(s) have not been reviewed. They will NOT be redacted. Export anyway?', 'Export anyway')) return;
     const missing = accepted.filter((m) => !m.citationId || !String(m.reason || '').trim()).length +
       [...S.withheld.values()].filter((w) => !w.citationId || !String(w.reason || '').trim()).length;
-    if (missing && !await confirmDialog(missing + ' redaction(s) have no stated reason. A written denial must give reasons (RSA 91-A:4, IV). Export anyway?', 'Export anyway')) return;
+    if (missing && !await confirmDialog(missing + ' redaction(s) have no stated reason. The reason goes in the redaction log and the denial letter, and the withholding body bears the burden of justifying each exemption. Export anyway?', 'Export anyway')) return;
     if (!accepted.length && !S.withheld.size && !await confirmDialog('No redactions are accepted. Export a clean flattened copy anyway?', 'Export')) return;
 
     const r = store.state.settings.redaction;

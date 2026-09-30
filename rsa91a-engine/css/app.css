@@ -177,6 +177,7 @@ textarea.letter { font-family: "Times New Roman", Georgia, serif; font-size: 1re
 /* Citations */
 .cite-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; }
 .cite-card.user { border-style: dashed; }
+.cite-card.unconfirmed { border-left: 4px solid var(--warn); }
 .cite-card h3 { margin: 0; }
 .cite-card .title { font-weight: 600; margin: 6px 0; }
 

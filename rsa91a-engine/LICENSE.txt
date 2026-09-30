@@ -1,12 +1,103 @@
 RSA91A-Engine
-Copyright (c) 2026 Ninth State Software. All rights reserved.
+END USER LICENSE AGREEMENT
+Version 1.0.1, September 30, 2026
 
-This software is licensed, not sold. Use is governed by the license terms
-provided at purchase from NinthStateSoftware.com. No part of this software
-may be copied, redistributed, or resold except as those terms allow.
+Copyright (c) 2026 Ninth State Software [VERIFY: exact legal entity name and
+entity type, e.g. "Ninth State Software LLC, a New Hampshire limited liability
+company"]. All rights reserved.
 
-Third-party components are licensed separately; see THIRD_PARTY_NOTICES.md.
+This is a legal agreement between you (an individual or a single organization,
+"you") and Ninth State Software ("we" or "us") for the RSA91A-Engine software,
+including its files, documentation and any updates we provide ("the Software").
+By downloading, installing or using the Software you agree to these terms. If
+you do not agree, do not use the Software and request a refund under Section 9.
 
-THIS SOFTWARE DRAFTS DOCUMENTS AND APPLIES REDACTIONS THE USER SELECTS. IT
-DOES NOT PROVIDE LEGAL ADVICE. THE USER IS RESPONSIBLE FOR REVIEWING EVERY
-REDACTION, CITATION, AND LETTER BEFORE RELEASE.
+1. WHAT YOU GET
+   We grant you a non-exclusive, non-transferable license to install and use
+   the Software for your own business or personal purposes, on the number of
+   computers your purchase covers:
+   - Single-user license: one person, on up to two computers that person uses.
+   - Organization license: every employee or official of one named public body,
+     agency, firm or newsroom, at one address, on any number of computers.
+   [VERIFY: match these tiers to the tiers offered on NinthStateSoftware.com.]
+
+2. WHAT YOU MAY NOT DO
+   You may not:
+   a. copy the Software except for backup;
+   b. sell, rent, lease, lend, sublicense, host for others or redistribute the
+      Software or any part of it;
+   c. remove or alter any copyright, license or attribution notice;
+   d. reverse engineer or decompile the Software except where the law allows it
+      regardless of this term;
+   e. use the Software to build a competing product.
+
+3. THIRD-PARTY COMPONENTS
+   The Software includes PDF.js (Mozilla Foundation, Apache License 2.0) and
+   pdf-lib (Andrew Dillon, MIT License). Those components are licensed under
+   their own terms, reproduced in THIRD_PARTY_NOTICES.md and js/vendor/. Nothing
+   in this agreement limits your rights under those licenses to those components.
+
+4. YOUR DATA
+   The Software runs on your computer and stores its data in your web browser.
+   It sends nothing to us or anyone else. We do not collect usage data, request
+   data, documents or redactions. You are responsible for backing up your data
+   using the Software's backup feature.
+
+5. NOT LEGAL ADVICE
+   The Software drafts documents, counts deadlines and applies the redactions
+   you choose. It does not decide what New Hampshire RSA chapter 91-A or any
+   other law requires. Its built-in citations describe the law as we understood
+   it on the date of release, and statutes and case law change. You are
+   responsible for confirming every citation against the current statute,
+   reviewing every redaction before release, and consulting a lawyer on any
+   legal question. We are not a law firm and nothing in the Software is legal
+   advice.
+
+6. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+   PURPOSE AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SOFTWARE WILL FIND
+   EVERY ITEM OF SENSITIVE INFORMATION IN A DOCUMENT, THAT ITS DEADLINE COUNTS
+   MATCH ANY PARTICULAR AGENCY'S OR COURT'S COUNTING METHOD, OR THAT ITS
+   CITATIONS ARE CURRENT. Some jurisdictions do not allow the exclusion of
+   implied warranties, so this exclusion may not apply to you.
+
+7. LIMIT ON LIABILITY
+   TO THE FULLEST EXTENT THE LAW ALLOWS, WE ARE NOT LIABLE FOR ANY INDIRECT,
+   INCIDENTAL, SPECIAL, CONSEQUENTIAL OR PUNITIVE DAMAGES, OR FOR LOST PROFITS,
+   LOST DATA, FINES, PENALTIES, ATTORNEY'S FEES OR COSTS AWARDED IN ANY
+   PROCEEDING, ARISING FROM OR RELATED TO THE SOFTWARE OR THIS AGREEMENT, EVEN
+   IF ADVISED OF THE POSSIBILITY. OUR TOTAL LIABILITY FOR ANY CLAIM IS LIMITED
+   TO THE AMOUNT YOU PAID FOR THE SOFTWARE IN THE TWELVE MONTHS BEFORE THE CLAIM.
+
+8. UPDATES AND SUPPORT
+   We may provide updates at our discretion. Updates are covered by this
+   agreement unless they come with different terms. Support, if any, is
+   described on NinthStateSoftware.com at the time of purchase.
+
+9. REFUNDS
+   [VERIFY: state the refund policy exactly as offered on the store, e.g.
+   "Full refund within 14 days of purchase on request to
+   support@ninthstatesoftware.com."]
+
+10. TERM AND TERMINATION
+   This agreement lasts until terminated. It terminates automatically if you
+   break any of its terms. On termination you must stop using the Software and
+   delete all copies. Sections 2 through 7 and 11 survive termination.
+
+11. GOVERNING LAW
+   This agreement is governed by the laws of the State of New Hampshire without
+   regard to its conflict-of-laws rules. Any dispute will be brought in the
+   state or federal courts located in New Hampshire, and you consent to their
+   jurisdiction. [VERIFY with counsel: venue county, and whether to add an
+   arbitration or small-claims clause.]
+
+12. ENTIRE AGREEMENT
+   This agreement is the entire agreement between you and us about the
+   Software. If any term is unenforceable, the rest remains in effect. Our
+   failure to enforce a term is not a waiver of it.
+
+Questions: [VERIFY: support email and mailing address for Ninth State Software.]
+
+THIS LICENSE IS A DRAFT PREPARED WITHOUT A LAWYER. HAVE IT REVIEWED BY COUNSEL
+BEFORE THE FIRST SALE. REMOVE THIS LINE AND EVERY [VERIFY] NOTE BEFORE RELEASE.

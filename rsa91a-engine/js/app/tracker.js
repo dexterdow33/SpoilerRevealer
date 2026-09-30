@@ -116,7 +116,7 @@
 
     if (!reqs.length) {
       host.appendChild(h('div', { class: 'empty' },
-        h('p', {}, 'No requests yet. Log every Right-to-Know request here, whether you are sending it or answering it. The tracker counts the 5-business-day response window under RSA 91-A:4, IV.'),
+        h('p', {}, 'No requests yet. Log every Right-to-Know request here, whether you are sending it or answering it. The tracker counts the 5-business-day response window under RSA 91-A:4, IV(b).'),
         h('button', { class: 'primary', onclick: () => edit(null) }, 'Log the first request')));
       return;
     }
