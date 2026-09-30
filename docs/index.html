@@ -80,6 +80,15 @@
     .section-head h2 { font-size: clamp(26px, 3.4vw, 34px); }
     .section-head a { font-size: 15px; color: var(--muted); }
 
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: -12px 0 32px; }
+    .filters button {
+      font: inherit; font-size: 13.5px; font-weight: 500; cursor: pointer; border-radius: 999px;
+      padding: 6px 14px; border: 1px solid var(--line); background: var(--surface); color: var(--muted);
+    }
+    .filters button:hover { color: var(--ink); border-color: var(--ink); }
+    .filters button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .filters button:focus-visible, .buy:focus-visible, .cover:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .book .meta { font-size: 12.5px; color: var(--muted); margin: 0 0 8px; letter-spacing: .02em; font-variant-numeric: tabular-nums; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 40px 28px; }
     .book { display: flex; flex-direction: column; }
     .cover {
@@ -152,7 +161,7 @@
       <div class="wrap">
         <p class="eyebrow">Author · Publisher · New Hampshire</p>
         <h1>Books on how power works.</h1>
-        <p class="lede">Nonfiction on the systems most people live inside without seeing: politics, political economy, artificial intelligence, and the media.</p>
+        <p class="lede">Nonfiction on the systems most people live inside without seeing: politics, political economy, artificial intelligence, and the media. <span id="book-count"></span></p>
         <a class="btn primary" href="#books">See the books</a>
         <a class="btn ghost" id="store-link" href="#" target="_blank" rel="noopener">Amazon author page</a>
       </div>
@@ -164,6 +173,7 @@
           <h2>Books</h2>
           <a id="store-link-2" href="#" target="_blank" rel="noopener">Full catalog on Amazon →</a>
         </div>
+        <div class="filters" id="filters" role="group" aria-label="Filter books by topic"></div>
         <div class="grid" id="book-grid"></div>
         <noscript><p>Turn on JavaScript to see the book list, or visit the <a href="https://www.amazon.com/stores/author/B0G961TFG9">Amazon author page</a>.</p></noscript>
       </div>
@@ -231,31 +241,66 @@
       }
 
       var grid = document.getElementById("book-grid");
-      (window.BOOKS || []).filter(function (b) { return b.live; }).forEach(function (b) {
-        var url = b.asin ? "https://www.amazon.com/dp/" + encodeURIComponent(b.asin) : store;
-        var card = el("article", "book");
+      var filters = document.getElementById("filters");
+      var books = (window.BOOKS || []).filter(function (b) { return b.live; });
+      var countEl = document.getElementById("book-count");
+      if (countEl) countEl.textContent = books.length + " titles, all independently published.";
 
-        var cover = el("a", "cover");
-        cover.href = url; cover.target = "_blank"; cover.rel = "noopener";
-        cover.style.background = "linear-gradient(160deg, " + colorFor(b.title) + ", #0d0d0d)";
-        cover.setAttribute("aria-label", b.title + " on Amazon");
-        var top = el("div");
-        top.appendChild(el("div", "rule"));
-        var t = el("div", "t", b.title); t.style.marginTop = "18px";
-        top.appendChild(t);
-        if (b.subtitle) top.appendChild(el("div", "s", b.subtitle));
-        cover.appendChild(top);
-        cover.appendChild(el("div", "a", "Dexter Dow"));
-        card.appendChild(cover);
+      function buyUrl(b) {
+        if (b.asin) return "https://www.amazon.com/dp/" + encodeURIComponent(b.asin);
+        if (b.isbn) return "https://www.amazon.com/s?k=" + encodeURIComponent(b.isbn);
+        return store;
+      }
 
-        card.appendChild(el("h3", null, b.title));
-        if (b.subtitle) card.appendChild(el("p", "sub", b.subtitle));
-        if (b.blurb) card.appendChild(el("p", "blurb", b.blurb));
-        var buy = el("a", "buy", "Buy on Amazon →");
-        buy.href = url; buy.target = "_blank"; buy.rel = "noopener";
-        card.appendChild(buy);
-        grid.appendChild(card);
+      function render(topic) {
+        grid.textContent = "";
+        books.filter(function (b) { return !topic || b.topic === topic; }).forEach(function (b) {
+          var url = buyUrl(b);
+          var card = el("article", "book");
+
+          var cover = el("a", "cover");
+          cover.href = url; cover.target = "_blank"; cover.rel = "noopener";
+          cover.style.background = "linear-gradient(160deg, " + colorFor(b.title) + ", #0d0d0d)";
+          cover.setAttribute("aria-label", b.title + " on Amazon");
+          var top = el("div");
+          top.appendChild(el("div", "rule"));
+          var t = el("div", "t", b.title); t.style.marginTop = "18px";
+          top.appendChild(t);
+          if (b.subtitle) top.appendChild(el("div", "s", b.subtitle));
+          cover.appendChild(top);
+          cover.appendChild(el("div", "a", "Dexter Dow"));
+          card.appendChild(cover);
+
+          card.appendChild(el("h3", null, b.title));
+          if (b.subtitle) card.appendChild(el("p", "sub", b.subtitle));
+          card.appendChild(el("p", "meta", [b.year, b.topic].filter(Boolean).join(" · ")));
+          if (b.blurb) card.appendChild(el("p", "blurb", b.blurb));
+          var buy = el("a", "buy", "Buy on Amazon →");
+          buy.href = url; buy.target = "_blank"; buy.rel = "noopener";
+          card.appendChild(buy);
+          grid.appendChild(card);
+        });
+      }
+
+      var topics = (window.TOPICS || []).filter(function (t) {
+        return books.some(function (b) { return b.topic === t; });
       });
+      var current = "";
+      function setFilter(topic) {
+        current = topic;
+        Array.prototype.forEach.call(filters.children, function (btn) {
+          btn.setAttribute("aria-pressed", btn.dataset.topic === topic ? "true" : "false");
+        });
+        render(topic);
+      }
+      [""].concat(topics).forEach(function (t) {
+        var n = books.filter(function (b) { return !t || b.topic === t; }).length;
+        var btn = el("button", null, (t || "All") + " (" + n + ")");
+        btn.type = "button"; btn.dataset.topic = t;
+        btn.addEventListener("click", function () { setFilter(t); });
+        filters.appendChild(btn);
+      });
+      setFilter("");
 
       var root = document.documentElement;
       try { var saved = localStorage.getItem("theme"); if (saved) root.setAttribute("data-theme", saved); } catch (e) {}

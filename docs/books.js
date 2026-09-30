@@ -1,76 +1,119 @@
 /*
- * DexterDow.com — book catalog.
- * Edit this file to add, fix, or publish a book. Nothing else needs to change.
+ * DexterDow.com book catalog. Edit this file to add, fix, or publish a book.
  *
- * Fields
- *   title     Exact title as it appears on the cover / KDP listing.
- *   subtitle  Exact subtitle. Leave "" if not confirmed.
- *   asin      Amazon ASIN or ISBN-10. The buy link is built from it.
- *   blurb     One or two sentences. Leave "" rather than guess.
- *   live      true = shown on the site. false = held until confirmed.
- *   verify    Note on what still needs checking. Not shown on the site.
+ * Source: the title and copyright pages of the KDP manuscripts Dexter supplied on
+ * 2026-09-30 (My_Books.zip). Title, subtitle, ISBN, and year come from those pages.
+ * Blurbs are either the author’s own one-line descriptions from the “Also by” pages,
+ * or (where the verify note says so) condensed from the manuscript.
  *
- * Source for every entry: web search results for Dexter Dow's Amazon author
- * page (amazon.com/stores/author/B0G961TFG9) and Amazon product listings,
- * run 2026-09-29. Amazon itself could not be opened from the build machine,
- * so subtitles, blurbs, and ASINs are unconfirmed until checked against KDP.
+ * Fields: title, subtitle, topic, year, isbn (paperback), asin (Kindle, if known),
+ * blurb, live (shown on the site), verify (what still needs checking; not shown).
+ * Buy link: amazon.com/dp/<asin> when set, otherwise an Amazon search for the ISBN.
  */
 window.AUTHOR_STORE = "https://www.amazon.com/stores/author/B0G961TFG9";
 
-window.BOOKS = [
-  {
-    title: "The 48 Laws of Politics",
-    subtitle: "",
-    asin: "B0GGLZKTPL",
-    blurb:
-      "An unsentimental guide to how political power is acquired, exercised, defended, and preserved, written in the tradition of Robert Greene's The 48 Laws of Power.",
-    live: true,
-    verify:
-      "Subtitle appeared truncated in search ('Master the Game of Power, ...'). Paste the full subtitle from KDP. Blurb condensed from the Amazon description as quoted by search.",
-  },
-  {
-    title: "Political Power",
-    subtitle: "A Comprehensive Guide to How Power Actually Works",
-    asin: "B0GBZ2THMP",
-    blurb:
-      "A clear-eyed guide to how power is built, hidden, abused, restrained, lost, and renewed.",
-    live: true,
-    verify: "Blurb condensed from the Amazon description as quoted by search.",
-  },
-  {
-    title: "Escaping the Matrix",
-    subtitle: "How to Escape Capitalism",
-    asin: "B0G4JQR7ZS",
-    blurb: "",
-    live: true,
-    verify:
-      "Found on amazon.fr under 'Dow, Dexter'. Confirm the ASIN resolves on amazon.com. Add blurb.",
-  },
-  {
-    title: "America Is a Third World Country",
-    subtitle: "",
-    asin: "B0GJS1WY4N",
-    blurb: "",
-    live: true,
-    verify:
-      "Found on amazon.ca under 'Dow, Dexter'. Confirm subtitle and that the ASIN resolves on amazon.com. Add blurb.",
-  },
+window.TOPICS = ["Politics & Power", "America & Empire", "AI & Technology", "Economy & Work", "Media & Belief", "Mind & Psychology", "New Hampshire"];
 
-  // Held: titles named in the Amazon author bio as quoted by search, with no
-  // product listing found. Add the ASIN and set live: true once confirmed.
-  { title: "Sincerely, America", subtitle: "", asin: "", blurb: "", live: false, verify: "Title only. Need ASIN, subtitle." },
-  { title: "The Poverty Engine", subtitle: "", asin: "", blurb: "", live: false, verify: "Title only. Need ASIN, subtitle." },
-  { title: "The AI Arms Race", subtitle: "", asin: "", blurb: "", live: false, verify: "Title only. Need ASIN, subtitle." },
-  { title: "The Obsolescence Engine", subtitle: "", asin: "", blurb: "", live: false, verify: "Title only. Need ASIN, subtitle." },
-  { title: "The Business of Belief", subtitle: "", asin: "", blurb: "", live: false, verify: "Title only. Need ASIN, subtitle." },
-  { title: "The Beautiful Lie", subtitle: "", asin: "", blurb: "", live: false, verify: "Title only. A different book by this name exists (Tobin Crenshaw); confirm yours." },
-  { title: "Common Ground", subtitle: "", asin: "", blurb: "", live: false, verify: "Title only. Common title; confirm yours." },
-  {
-    title: "The AI Newsroom Revolution",
-    subtitle: "",
-    asin: "B0GGM5C1W9",
-    blurb: "",
-    live: false,
-    verify: "Surfaced in a Dexter Dow search but authorship not confirmed. Confirm it is yours before publishing.",
-  },
+window.BOOKS = [
+  { title: "9/11 as a Message to Empire", subtitle: "Power, Trauma, and the Reinforcement of the American State", topic: "America & Empire", year: 2026, isbn: "9798248810239", asin: "",
+    blurb: "", live: true },
+  { title: "AI Generated", subtitle: "How Synthetic Content Is Rewriting Reality—and How to Stay Ahead of It", topic: "AI & Technology", year: 2026, isbn: "9798249317881", asin: "",
+    blurb: "An investigation into the collision of AI-produced content with truth, trust, and the information ecosystem.", live: true },
+  { title: "Borrowed Brilliance", subtitle: "The Ethics and Morality of Claiming Credit in the Age of Artificial Intelligence", topic: "AI & Technology", year: 2026, isbn: "9798251457582", asin: "",
+    blurb: "The case that human directors of AI-assisted work retain full authorship credit.", live: true },
+  { title: "Common Ground", subtitle: "A Field Guide to Productive Political Conversation in a Divided Democracy", topic: "Politics & Power", year: 2026, isbn: "9798248701292", asin: "",
+    blurb: "", live: true },
+  { title: "Generational Malpractice", subtitle: "What Older Americans Did to Housing, Education, Work, and the Planet", topic: "Economy & Work", year: 2026, isbn: "9798252626468", asin: "",
+    blurb: "", live: true },
+  { title: "Indoctrinated America", subtitle: "How a Nation Was Taught What to Think and Forgot How to Question", topic: "Media & Belief", year: 2026, isbn: "9798251420302", asin: "",
+    blurb: "Cognitive science, media history, political psychology, and AI’s role in shaping public opinion.", live: true },
+  { title: "Sincerely, America", subtitle: "Apology Letters to Every Country We’ve Wronged", topic: "America & Empire", year: 2026, isbn: "9798252632322", asin: "",
+    blurb: "", live: true },
+  { title: "Surviving Narcissistic Abuse", subtitle: "A Recovery Guide for Psychological, Emotional, and Legal Healing", topic: "Mind & Psychology", year: 2026, isbn: "9798248555635", asin: "",
+    blurb: "", live: true },
+  { title: "The 48 Laws of Trump", subtitle: "A Contemporary Power Playbook", topic: "Politics & Power", year: 2026, isbn: "9798248958368", asin: "",
+    blurb: "Political analysis applying Robert Greene’s power framework to modern American politics.", live: true },
+  { title: "The Antitrust Singularity", subtitle: "Why Capitalism Cannot Contain Artificial General Intelligence", topic: "AI & Technology", year: 2026, isbn: "9798252640594", asin: "",
+    blurb: "A political-economic analysis of AI consolidation, antitrust law, and democratic governance.", live: true,
+    verify: "Title page also carries a second line: ‘A Political-Economic Analysis of Intelligence, Monopoly, and Democratic Order.’ Using the first line as the subtitle." },
+  { title: "The Atomic Privilege", subtitle: "Weapons, Treaties, and the World’s Most Dangerous Double Standard", topic: "America & Empire", year: 2026, isbn: "9798251311310", asin: "",
+    blurb: "Nuclear nonproliferation and geopolitical inequality in the global nuclear order.", live: true },
+  { title: "The Beautiful Lie", subtitle: "How JFK Invented the Media-Made President, and How AI Will Finish What He Started", topic: "Media & Belief", year: 2026, isbn: "9798252652917", asin: "",
+    blurb: "", live: true,
+    verify: "File is named ‘A Beautiful Lie’; the title page says ‘The Beautiful Lie’. Using the title page." },
+  { title: "The Business of Belief", subtitle: "How American Christianity Perfected Control, Monetized Faith, and Shaped the Nation", topic: "Media & Belief", year: 2026, isbn: "9798248121731", asin: "",
+    blurb: "", live: true },
+  { title: "The Price of Genius", subtitle: "Intelligence, Creativity, and the Hidden Costs of Extreme Minds", topic: "Mind & Psychology", year: 2026, isbn: "9798250017930", asin: "",
+    blurb: "", live: true },
+  { title: "The Second Gilded Age", subtitle: "Monopoly, Inequality, and the Fight for Democracy in the Age of Algorithms", topic: "Economy & Work", year: 2026, isbn: "9798252647586", asin: "",
+    blurb: "", live: true },
+  { title: "Wake Up!", subtitle: "Escaping the American Matrix of Money, Myth, and Manufactured Reality", topic: "Media & Belief", year: 2026, isbn: "9798252772899", asin: "",
+    blurb: "", live: true },
+  { title: "Work Can Bite Me", subtitle: "Burnout, Hustle Culture, and the Moral Failure of Modern Work", topic: "Economy & Work", year: 2026, isbn: "9798248296064", asin: "",
+    blurb: "", live: true },
+  { title: "76: A New Declaration for the Granite State", subtitle: "Freedom, Fairness, and the Future of New Hampshire", topic: "New Hampshire", year: 2025, isbn: "9798271406294", asin: "",
+    blurb: "", live: true },
+  { title: "AI or Die", subtitle: "Adaptation in the Age of Machine Intelligence", topic: "AI & Technology", year: 2025, isbn: "9798261868200", asin: "",
+    blurb: "A wake-up call for businesses and individuals navigating the AI revolution.", live: true },
+  { title: "AI Power User", subtitle: "How One Person Can Outperform an Entire Team", topic: "AI & Technology", year: 2025, isbn: "9798245497457", asin: "",
+    blurb: "", live: true },
+  { title: "America Is a Third World Country", subtitle: "", topic: "America & Empire", year: 2025, isbn: "9798245590677", asin: "B0GJS1WY4N",
+    blurb: "", live: true,
+    verify: "No subtitle on the title page; add a blurb if you want one." },
+  { title: "Brainwashed Americans", subtitle: "How Power, Media, and Manufactured Reality Hijacked the Public Mind", topic: "Media & Belief", year: 2025, isbn: "9798245633381", asin: "",
+    blurb: "", live: true },
+  { title: "Empire of Fear", subtitle: "When Power Becomes Terror", topic: "Politics & Power", year: 2025, isbn: "9798241101167", asin: "",
+    blurb: "", live: true },
+  { title: "Escaping the Matrix", subtitle: "How to Escape Capitalism", topic: "Economy & Work", year: 2025, isbn: "9798276730370", asin: "B0G4JQR7ZS",
+    blurb: "Recognizing and resisting ideological control in media and politics.", live: true },
+  { title: "Flipping the Tables", subtitle: "Why Jesus Rejected Profit, Power, and the Market God", topic: "Media & Belief", year: 2025, isbn: "9798245459684", asin: "",
+    blurb: "", live: true },
+  { title: "Genesis Loop", subtitle: "How Artificial Intelligence Seeds Life, Builds Worlds, and Remembers Itself", topic: "AI & Technology", year: 2025, isbn: "9798244387988", asin: "",
+    blurb: "", live: true },
+  { title: "Governor AI", subtitle: "", topic: "AI & Technology", year: 2025, isbn: "9798275816877", asin: "",
+    blurb: "", live: true,
+    verify: "PDF only. Title page text could not be decoded; subtitle unknown. ISBN and 2025 copyright read from the copyright page." },
+  { title: "Peter’s Power", subtitle: "How Peter Thiel Rewired Money, Technology, and Politics", topic: "Politics & Power", year: 2025, isbn: "9798243881630", asin: "",
+    blurb: "", live: true },
+  { title: "Plausible Deniability", subtitle: "The CIA and the Architecture of American Power", topic: "America & Empire", year: 2025, isbn: "9798244295382", asin: "",
+    blurb: "", live: true },
+  { title: "Political Power", subtitle: "A Comprehensive Guide to How Power Actually Works", topic: "Politics & Power", year: 2025, isbn: "9798279457632", asin: "B0GBZ2THMP",
+    blurb: "", live: true },
+  { title: "Subjects of Empire", subtitle: "How Capitalism, Propaganda, and Permanent War Captured America", topic: "America & Empire", year: 2025, isbn: "9798243878333", asin: "",
+    blurb: "", live: true },
+  { title: "The 48 Laws of Politics", subtitle: "Master the Game of Power, Persuasion, and Public Perception", topic: "Politics & Power", year: 2025, isbn: "9798243886536", asin: "B0GGLZKTPL",
+    blurb: "", live: true },
+  { title: "The 48 Powers of the Mind", subtitle: "Unlocking Your Potential Through Psychology and Self-Improvement", topic: "Mind & Psychology", year: 2025, isbn: "9798241867940", asin: "",
+    blurb: "", live: true },
+  { title: "The AI Newsroom Revolution", subtitle: "How Artificial Intelligence Is Rewriting Journalism, Politics, Public Truth—and Who Gets Power Next", topic: "AI & Technology", year: 2025, isbn: "9798243884136", asin: "B0GGM5C1W9",
+    blurb: "", live: true },
+  { title: "The American Letdown", subtitle: "How the Richest Country on Earth Perfected Failure", topic: "America & Empire", year: 2025, isbn: "9798244546019", asin: "",
+    blurb: "", live: true },
+  { title: "The Civic Operating System", subtitle: "How AI Can Rebuild Democracy, Government, and Truth", topic: "AI & Technology", year: 2025, isbn: "9798279452057", asin: "",
+    blurb: "", live: true },
+  { title: "The Edge of Insight", subtitle: "Genetic Risk, Creative Gain, and the Minds That Walk the Line", topic: "Mind & Psychology", year: 2025, isbn: "9798244099140", asin: "",
+    blurb: "", live: true },
+  { title: "The Middle-Class Survival Guide 2026", subtitle: "How to Beat Inflation, Stay Employed, and Protect Your Money in the AI Economy", topic: "Economy & Work", year: 2025, isbn: "9798245046327", asin: "",
+    blurb: "", live: true },
+  { title: "The Most Expensive Lie I Ever Believed", subtitle: "How College Sold Me a Future – and Took Everything Else", topic: "Economy & Work", year: 2025, isbn: "9798245349985", asin: "",
+    blurb: "", live: true },
+  { title: "The Unaccountable Class", subtitle: "How Power Rewires the Brain and Turns Elites Against Everyone Else", topic: "Politics & Power", year: 2025, isbn: "9798279493746", asin: "",
+    blurb: "The institutions and individuals who shape policy without democratic accountability.", live: true },
+  { title: "Tribal Machines", subtitle: "", topic: "Politics & Power", year: 2025, isbn: "9798278914617", asin: "",
+    blurb: "Why Republicans and Democrats can’t stand each other: party has become a fused social identity that our brains defend like family, while institutions and media pay in attention for outrage.", live: true,
+    verify: "No subtitle on the title page. Blurb condensed from the manuscript’s own one-paragraph summary." },
+  { title: "Unemployable", subtitle: "How the Job Market Broke, the Career Ladder Vanished, and AI Finished the Job", topic: "Economy & Work", year: 2025, isbn: "9798246429686", asin: "",
+    blurb: "", live: true },
+  { title: "Unfit to Serve", subtitle: "How the U.S. Military Disqualified a Nation", topic: "Politics & Power", year: 2025, isbn: "9798245450964", asin: "",
+    blurb: "", live: true },
+  { title: "Very Stable Genius", subtitle: "The Verbatim Record of Donald Trump’s Incompetence", topic: "Politics & Power", year: 2025, isbn: "9798241839220", asin: "",
+    blurb: "", live: true },
+  { title: "What Makes America Great Again?", subtitle: "Truths We Forgot. Systems We Broke. The Work Ahead.", topic: "Politics & Power", year: 2025, isbn: "9798241312327", asin: "",
+    blurb: "", live: true },
+  { title: "Malice Not Required", subtitle: "How America Criminalized Its Own People and Called It Justice", topic: "America & Empire", year: 2026, isbn: "", asin: "",
+    blurb: "", live: false,
+    verify: "Copyright page still has placeholder ISBNs (979-8-XXX). Looks unpublished. Add the ISBN and set live: true when it’s on KDP." },
+  { title: "The God That Forgot Us", subtitle: "Book One", topic: "Mind & Psychology", year: 2026, isbn: "9798249068905", asin: "",
+    blurb: "", live: false,
+    verify: "Fiction, credited to ‘A.I. Rowan’ on the title and copyright pages, not Dexter Dow. Held until you say whether it belongs on this site." },
 ];
