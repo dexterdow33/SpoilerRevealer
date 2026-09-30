@@ -50,19 +50,31 @@ function el(tag, attrs = {}, text) {
   return node;
 }
 
+function monogramColor(name) {
+  // Stable foliage hue per app name: red through gold.
+  let h = 0;
+  for (const c of name) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const hue = 4 + (h % 40);
+  return `linear-gradient(135deg, hsl(${hue} 78% 52%), hsl(${hue + 18} 88% 60%))`;
+}
+
 function listingCard(p) {
   const card = el("article", { class: "listing" + (p.sample ? " is-sample" : "") });
   if (p.sample) card.append(el("span", { class: "stamp" }, "Sample listing"));
 
+  const mono = el("span", { class: "monogram", "aria-hidden": "true" }, (p.name || "?").trim().charAt(0).toUpperCase());
+  mono.style.background = monogramColor(p.name || "?");
+  const kicker = el("div", { class: "listing-kicker" });
+  kicker.append(el("span", { class: "listing-tag" }, p.category || "App"));
+  if (p.price) kicker.append(el("span", { class: "listing-price" }, p.price));
   const top = el("div", { class: "listing-top" });
-  top.append(el("span", { class: "listing-tag" }, p.category || "App"));
-  if (p.price) top.append(el("span", { class: "listing-price" }, p.price));
+  top.append(mono, kicker);
 
   const foot = el("div", { class: "listing-foot" });
   const meta = [p.platform, p.version && "v" + p.version].filter(Boolean).join(" · ");
   foot.append(el("span", { class: "listing-meta" }, meta));
   if (p.buyUrl) {
-    foot.append(el("a", { class: "btn", href: p.buyUrl, rel: "noopener" }, "Buy"));
+    foot.append(el("a", { class: "btn", href: p.buyUrl, rel: "noopener" }, "Buy →"));
   } else if (p.infoUrl) {
     foot.append(el("a", { class: "btn btn-ghost", href: p.infoUrl, rel: "noopener" }, "Details"));
   }
@@ -82,8 +94,10 @@ function renderCatalog() {
   const empty = el("div", { class: "catalog-empty" });
   empty.append(
     el("h3", {}, "The catalog is being stocked."),
-    el("p", {}, "No apps are for sale yet. Leave your email below and you'll hear when the first one is listed.")
+    el("p", {}, "No apps are for sale yet. Leave your email and you'll hear when the first one is listed.")
   );
+  const jump = el("a", { href: "#contact" }, "Get notified →");
+  empty.append(jump);
   grid.append(empty, listingCard(SAMPLE));
 }
 
@@ -142,7 +156,64 @@ function wireNotify() {
   });
 }
 
+// Hero: layered White Mountains ridgelines drifting slowly. Static when motion is reduced.
+function ridges() {
+  const canvas = document.getElementById("ridges");
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext("2d");
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const layers = 6;
+  let w = 0, h = 0, colors = [];
+
+  function readColors() {
+    const cs = getComputedStyle(document.documentElement);
+    colors = ["--gold", "--accent", "--red"].map((v) => cs.getPropertyValue(v).trim() || "#f07a3a");
+  }
+  function size() {
+    const r = canvas.getBoundingClientRect();
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    w = r.width; h = r.height;
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  // Sum of sines gives a ridge profile with a few peaks per layer.
+  function ridgeY(x, i, t) {
+    const f = (i + 1) * 0.6;
+    return Math.sin(x * 0.004 * f + i * 1.7 + t * 0.00006 * (i + 1)) * 26
+         + Math.sin(x * 0.011 * f + i * 3.1 - t * 0.00004) * 12
+         + Math.sin(x * 0.023 + i * 5.3) * 5;
+  }
+  function draw(t) {
+    ctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < layers; i++) {
+      const base = h * (0.32 + i * 0.12);
+      ctx.beginPath();
+      ctx.moveTo(0, h);
+      for (let x = 0; x <= w + 8; x += 8) ctx.lineTo(x, base - ridgeY(x, i, t) * (1 + i * 0.25));
+      ctx.lineTo(w, h);
+      ctx.closePath();
+      const c = colors[i % colors.length];
+      ctx.globalAlpha = 0.05 + i * 0.03;
+      ctx.fillStyle = c;
+      ctx.fill();
+      ctx.globalAlpha = 0.35 + i * 0.08;
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = c;
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  readColors(); size(); draw(0);
+  addEventListener("resize", () => { size(); draw(performance.now()); });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => { readColors(); draw(performance.now()); });
+  if (!still) {
+    const loop = (t) => { draw(t); requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  }
+}
+
 document.getElementById("year").textContent = new Date().getFullYear();
+ridges();
 renderCatalog();
 renderContact();
 wireNotify();
